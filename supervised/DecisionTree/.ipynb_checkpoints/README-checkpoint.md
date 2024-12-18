@@ -1,84 +1,87 @@
-# **Unsupervised Learning:**
+# Decision Tree Classifier for Wine Quality Prediction
 
-## **Description**
-This project demonstrates the use of **unsupervised learning algorithms** to uncover hidden patterns, groupings, or structures within data. Unlike supervised learning, unsupervised learning does not require labeled data, making it suitable for exploring datasets with unknown or unstructured outcomes.
+This project uses a Decision Tree Classifier to predict wine quality based on chemical properties of the wine.
 
-### **What is Unsupervised Learning?**
-Unsupervised learning focuses on discovering:
-1. **Clusters**: Grouping similar data points (e.g., K-Means, DBSCAN).
-2. **Dimensionality Reduction**: Reducing the number of features while retaining essential information (e.g., PCA, t-SNE).
-3. **Anomaly Detection**: Identifying data points that deviate significantly from the norm.
+## Overview
+The project includes:
+- Training a Decision Tree Classifier on a dataset of wine samples.
+- Evaluating the model's performance using accuracy and a classification report.
+- Visualizing the Decision Tree structure for interpretability.
 
+## Dataset
+The dataset (`wine.csv`) contains:
+- **Features**: Chemical properties of the wine (e.g., acidity, sugar content).
+- **Target**: Wine quality (categorical labels).
 
+Ensure the dataset has a column `quality` as the target variable, and the remaining columns are used as features.
 
----
+## Requirements
+Install the following libraries before running the code:
+- `pandas`
+- `scikit-learn`
+- `matplotlib`
 
-## **Dataset**
-### **Structure**
-- **Features**: Input variables used for grouping or pattern identification.
-- **No Target Variable**: Unlike supervised learning, there are no labels or outputs.
+Use the command below to install the dependencies:
+```bash
+pip install pandas scikit-learn matplotlib
+```
 
-Example:
-- For clustering customers:
-  - **Features**: Age, Income, Spending Score.
-  - **Goal**: Group customers based on similar characteristics.
+## How It Works
+1. **Load Data**  
+   The dataset is loaded into a pandas DataFrame.
 
----
+2. **Feature and Target Separation**  
+   - `X`: Contains feature columns (chemical properties).
+   - `y`: Contains the target column (`quality`).
 
-## **Techniques Used**
-1. **Clustering**:
-   - **K-Means Clustering**: Groups data points into a predefined number of clusters.
-   - **DBSCAN**: Identifies clusters of varying shapes and densities.
-2. **Dimensionality Reduction**:
-   - **Principal Component Analysis (PCA)**: Projects data onto principal components to reduce dimensionality.
-3. **Visualization**:
-   - Scatter plots, heatmaps, and dendrograms for exploratory analysis.
+3. **Data Splitting**  
+   The data is split into training (80%) and testing (20%) sets.
 
----
+4. **Model Training**  
+   A Decision Tree Classifier is trained on the training set.
 
-## **Workflow**
-1. **Data Preprocessing**:
-   - Handle missing values, normalize numerical data, and encode categorical variables.
-2. **Algorithm Selection**:
-   - Choose an unsupervised learning technique based on the problem (e.g., clustering, dimensionality reduction).
-3. **Model Training**:
-   - Apply the algorithm to discover patterns in the data.
-4. **Evaluation**:
-   - Assess the results using metrics like Silhouette Score, Calinski-Harabasz Index, or visual inspection.
+5. **Model Evaluation**  
+   The model is evaluated using accuracy and a classification report.
 
+6. **Tree Visualization**  
+   The Decision Tree structure is visualized using `plot_tree`.
 
----
+## Usage
+Run the following script:
+```python
+# Load and preprocess data
+data = pd.read_csv('wine.csv')
 
-### **3. Dendrogram (For Hierarchical Clustering)**
-A tree-like diagram to visualize the hierarchical relationships between data points.
+# Split data into features and target
+X = data.drop('quality', axis=1)
+y = data['quality']
 
-![Dendrogram](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Dendrogram.svg/512px-Dendrogram.svg.png)
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
----
+# Train the Decision Tree model
+dt_model = DecisionTreeClassifier(random_state=42)
+dt_model.fit(X_train, y_train)
 
-## **Evaluation Metrics**
-1. **Silhouette Score**:
-   - Measures how well-separated the clusters are.
-   - Higher values indicate better-defined clusters.
-2. **Calinski-Harabasz Index**:
-   - Evaluates cluster density and separation.
-3. **Davies-Bouldin Index**:
-   - Lower values indicate better clustering performance.
+# Make predictions
+y_pred = dt_model.predict(X_test)
 
----
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+print(classification_report(y_test, y_pred))
 
-## **Usage Instructions**
-### **Dependencies**
-- Install the necessary Python libraries:
-   ```bash
-   pip install pandas numpy scikit-learn matplotlib seaborn
-   ```
+# Visualize the Decision Tree
+plt.figure(figsize=(20, 10))
+plot_tree(dt_model, feature_names=X.columns, class_names=dt_model.classes_.astype(str), filled=True, rounded=True)
+plt.show()
+```
 
-### **Steps to Run**
-1. Load the dataset into your Python environment.
-2. Choose an unsupervised learning algorithm (e.g., K-Means, PCA).
-3. Train the model on your dataset and visualize the results:
-   ```bash
-   python unsupervised_learning.py
-   ```
+## Outputs
+- **Accuracy**: Overall model accuracy on the test set.
+- **Classification Report**: Precision, recall, F1-score for each quality label.
+- **Decision Tree Visualization**: A detailed diagram showing the tree's splits.
 
+## Notes
+- Modify `test_size` and `random_state` in `train_test_split` for different splits.
+- Tune hyperparameters of `DecisionTreeClassifier` (e.g., `max_depth`, `min_samples_split`) to improve model performance.
